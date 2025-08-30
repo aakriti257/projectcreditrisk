@@ -1,0 +1,30 @@
+{
+  "evaluation": {
+    "source": {
+      "name": "total_loans",
+      "display": "total_loans",
+      "aggregation": "AGGREGATION_UNSPECIFIED"
+    },
+    "comparison_operator": "EQUAL",
+    "threshold": {
+      "value": {
+        "string_value": ""
+      }
+    },
+    "notification": {
+      "retrigger_seconds": 0,
+      "notify_on_ok": false
+    }
+  },
+  "schedule": {
+    "quartz_cron_schedule": "8 28 */1 * * ?",
+    "timezone_id": "UTC"
+  },
+  "query_lines": [
+    "SELECT \r",
+    "  COUNT(*) AS total_loans,\r",
+    "  SUM(CASE WHEN loan_status = 1 THEN 1 ELSE 0 END) AS total_defaults,\r",
+    "  (SUM(CASE WHEN loan_status = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS default_rate\r",
+    "FROM silver1.credit_data.credit_silver;\r"
+  ]
+}
